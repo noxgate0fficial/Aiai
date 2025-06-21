@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot Universe</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="importmap">
+        {
+            "imports": {
+                "canvas-confetti": "https://cdn.skypack.dev/canvas-confetti"
+            }
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>AI Chatbot Universe</h1>
+        <nav>
+            <button id="nav-discover">Discover</button>
+            <button id="nav-my-chats">My Chats</button>
+            <button id="nav-create">Create New Chatbot</button>
+            <button id="nav-profile">My Profile</button>
+            <button id="nav-settings">Settings</button>
+        </nav>
+    </header>
+
+    <main id="app">
+        <section id="discover-page" class="page">
+            <h2>Discover Chatbots</h2>
+            <div id="chatbot-list" class="chatbot-grid">
+                <!-- Chatbots will be listed here -->
+            </div>
+            <p id="no-chatbots-message" style="display:none;">No public chatbots available yet. Why not create one?</p>
+        </section>
+
+        <section id="my-chats-page" class="page" style="display:none;">
+            <h2>My Chats</h2>
+            <div id="my-chat-list" class="chatbot-grid">
+                <!-- Previously chatted bots will be listed here -->
+            </div>
+            <p id="no-my-chats-message" style="display:none;">You haven't chatted with any bots yet. Start a conversation from the Discover page!</p>
+        </section>
+
+        <section id="create-chatbot-page" class="page" style="display:none;">
+            <h2>Create a New Chatbot</h2>
+            <div id="username-required-message-create" class="form-message-warning" style="display:none; margin-bottom: 1rem; padding: 10px; background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; border-radius: 4px;">
+                Please set a username in <a href="#" id="go-to-settings-link-create">Settings</a> or your <a href="#" id="go-to-profile-link-create">Profile</a> before creating a chatbot.
+            </div>
+            <form id="create-chatbot-form">
+                <div class="form-group">
+                    <label for="chatbot-name">Name:</label>
+                    <input type="text" id="chatbot-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="chatbot-description">Description (short, for discovery card):</label>
+                    <input type="text" id="chatbot-description" maxlength="100" required>
+                </div>
+                <div class="form-group">
+                    <label for="chatbot-persona">Persona (AI's personality and instructions):</label>
+                    <textarea id="chatbot-persona" rows="4" placeholder="e.g., You are a friendly pirate captain who loves to talk about treasure and adventures. You end every sentence with 'Arrr!'" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="chatbot-scenario">Scenario (Context for the conversation):</label>
+                    <textarea id="chatbot-scenario" rows="3" placeholder="e.g., The user has just boarded your pirate ship."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="chatbot-first-message">First Message (AI's opening line):</label>
+                    <input type="text" id="chatbot-first-message" placeholder="e.g., Ahoy there, matey! Welcome aboard the Sea Serpent! Arrr!" required>
+                </div>
+                <div class="form-group">
+                    <label for="chatbot-image">Chatbot Image (optional):</label>
+                    <input type="file" id="chatbot-image" accept="image/*">
+                    <img id="image-preview" src="#" alt="Image preview" style="display:none; max-width: 100px; max-height:100px; margin-top: 10px; border-radius: 4px; object-fit: cover;">
+                </div>
+                <div class="form-group">
+                    <label for="chatbot-visibility">Visibility:</label>
+                    <select id="chatbot-visibility">
+                        <option value="public">Public (discoverable)</option>
+                        <option value="private">Private (not discoverable, link only - for future)</option>
+                    </select>
+                </div>
+                <button type="submit" class="action-button">Create Chatbot</button>
+            </form>
+        </section>
+
+        <section id="chat-page" class="page" style="display:none;">
+            <div class="chat-header">
+                <button id="back-to-discover" class="small-button">&larr; Back</button>
+                <img id="chat-header-image" src="#" alt="Chatbot image" style="display:none; width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; object-fit: cover;">
+                <h2 id="chat-with-name">Chat with ...</h2>
+            </div>
+            <div id="chat-messages" class="chat-messages-container">
+                <!-- Messages will appear here -->
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="message-input" placeholder="Type your message...">
+                <button id="send-message-button" class="action-button">Send</button>
+            </div>
+        </section>
+
+        <section id="profile-page" class="page" style="display:none;">
+            <h2>My Profile</h2>
+            <div class="form-group">
+                <strong>Username:</strong> <span id="profile-username-display">Not set</span>
+                <button id="edit-username-profile-button" class="small-button" style="margin-left: 10px;">Edit Username</button>
+            </div>
+            <div id="username-edit-container-profile" class="form-group" style="display:none; margin-top:10px; margin-bottom:20px;">
+                <label for="username-input-profile">New Username:</label>
+                <input type="text" id="username-input-profile" placeholder="Enter your username (3-20 chars)">
+                <button id="save-username-profile-button" class="action-button">Save Username</button>
+                <button id="cancel-username-profile-button" class="small-button">Cancel</button>
+            </div>
+
+            <h3>My Created Chatbots</h3>
+            <div id="my-created-bots-list" class="chatbot-grid">
+                <!-- User's created bots will be listed here -->
+            </div>
+            <p id="no-created-bots-message" style="display:none;">You haven't created any chatbots yet. Go to "Create New Chatbot" to make your first one!</p>
+        </section>
+
+        <section id="settings-page" class="page" style="display:none;">
+            <h2>Settings</h2>
+             <div class="form-group">
+                <label for="current-username-settings-display">Current Username:</label>
+                <span id="current-username-settings-display">Not set</span>
+                <button id="change-username-settings-button" class="small-button" style="margin-left: 10px;">
+                    Set/Change Username
+                </button>
+            </div>
+            <div id="username-input-container-settings" class="form-group" style="display:none;">
+                <label for="username-input-settings">Username (3-20 characters):</label>
+                <input type="text" id="username-input-settings" placeholder="Enter your username">
+                <button id="save-username-settings-button" class="action-button">Save Username</button>
+                <button id="cancel-username-settings-button" class="small-button">Cancel</button>
+            </div>
+            <hr style="margin: 20px 0;">
+            <div class="form-group">
+                <label for="dark-mode-toggle">Dark Mode:</label>
+                <label class="switch">
+                    <input type="checkbox" id="dark-mode-toggle">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
